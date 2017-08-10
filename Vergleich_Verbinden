@@ -1,0 +1,32 @@
+'source code from URL: http://www.herber.de/forum/archiv/1152to1156/1154322_Zellen_vergleichen_und_verbinden.html
+Sub SpalteA_Identische_Verbinden()
+  Dim wks As Worksheet, Zeile1 As Long, ZeileL As Long, Zeile As Long
+  If MsgBox("Identische Zellen in Spalte A verbinden?", vbQuestion + vbYesNo, _
+    "Identische Zellen verbinden - Sicherheitsabfrage") = vbYes Then
+    Set wks = ActiveSheet
+    Const Spalte = 1 'Spalte A - Spalte in der Zellen verbunden werden sollen
+    With wks
+      'Letzte Datenzeile Spalte A
+      ZeileL = .Cells(.Rows.Count, Spalte).End(xlUp).Row
+      Zeile = 2 'Zeile ab der Zellen verbunden verden sollen wenn Inhalt identisch
+      Zeile1 = Zeile 'Startzeile für 1. Wert merken.
+      Do Until Zeile > ZeileL
+        Zeile = Zeile + 1
+        'Wert mit vorheriger Zeile vergleichen
+        If .Cells(Zeile, Spalte).Value = .Cells(Zeile - 1, Spalte).Value Then
+          'do nothing
+        Else
+          If Zeile - Zeile1 > 1 Then 'mehrere identische Zeilen
+            'Inhalte der Zellen löschen außer 1. Zeile
+            .Range(.Cells(Zeile1 + 1, Spalte), .Cells(Zeile - 1, Spalte)).ClearContents
+            'Zellen vebinden
+            .Range(.Cells(Zeile1, Spalte), .Cells(Zeile - 1, Spalte)).Merge
+          End If
+          'Startzeile für nächsten Wert merken
+          Zeile1 = Zeile
+        End If
+      Loop
+    End With
+  End If
+  Set wks = Nothing
+End Sub
